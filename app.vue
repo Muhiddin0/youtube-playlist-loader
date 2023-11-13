@@ -31,17 +31,19 @@ export default {
     }
   },
   methods: {
-    // https://web-production-ccb0.up.railway.app/?url=https://www.youtube.com/watch?v=Gw6UnYG-nU0 
     async loading(e) {
       let btn = e.target
       let input = this.$refs['input']
       if (!e) return
 
-      this.url = this.url.replace("https://www.youtube.com/playlist?list=", "")
-
-      const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=25&playlistId=${this.url}&key=AIzaSyCLf_fM1Kb9rZhY_iGB01i95wy5bsvDmwE`);
-      this.videos = response.data.items
-      console.log(response.data.items);
+      let playlist = this.url.search('playlist') != -1 ? 'playlist' : null
+      if (playlist) {
+        let playlistID = this.url.split("playlist?list=")[1]
+        let api_key = "AIzaSyCLf_fM1Kb9rZhY_iGB01i95wy5bsvDmwE"
+        console.log(playlistID);
+        const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=25&playlistId=${playlistID}&key=${api_key}`);
+        this.videos = response.data.items
+      }
     },
   }
 }
